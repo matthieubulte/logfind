@@ -95,7 +95,7 @@ stringToPredicate regex       = (=~ regex)
 -- >>> (multipleStringsToPredicate []) "yz"
 -- True
 multipleStringsToPredicate :: [String] -> String -> Bool
-multipleStringsToPredicate xs = and . applyPredicates (stringToPredicate <$> xs)
+multipleStringsToPredicate xs = and . sequence (stringToPredicate <$> xs)
 
 -- |
 -- Converts multiple string to a predicate testing if a filename is to include in
@@ -111,7 +111,7 @@ multipleStringsToPredicate xs = and . applyPredicates (stringToPredicate <$> xs)
 -- >>> (matchesAll []) "xyz"
 -- True
 matchesAll :: [String] -> String -> Bool
-matchesAll xs = and . applyPredicates (flip (=~) <$> xs)
+matchesAll xs = and . sequence (flip (=~) <$> xs)
 
 
 -- |
@@ -132,13 +132,4 @@ matchesAll xs = and . applyPredicates (flip (=~) <$> xs)
 -- True
 matchesSome :: [String] -> String -> Bool
 matchesSome [] = const True
-matchesSome xs = or . applyPredicates (flip (=~) <$> xs)
-
-
--- |
--- Applies a list of predicates to a value.
---
--- >>> applyPredicates [(<1), (<3)] 2
--- [False,True]
-applyPredicates :: [a -> Bool] -> a -> [Bool]
-applyPredicates xs = (<$> xs) . flip ($)
+matchesSome xs = or . sequence (flip (=~) <$> xs)
