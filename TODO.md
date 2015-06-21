@@ -1,12 +1,12 @@
 ### TODO
 
 ##### research
-+ Find the best way to test if a file contains several words (AND feature)
-+ Find the best way to test if a file contains some words (OR feature)
-+ Find a unit test library
-+ Find a regular expression library
-+ Find a library to decode command line arguments
-+ Find out how to test IO code
++ find the best way to test if a file contains several words (AND feature)
++ find the best way to test if a file contains some words (OR feature)
++ find a unit test library
++ find a regular expression library
++ find a library to decode command line arguments
++ find out how to test IO code
 
 
 ##### implementation
