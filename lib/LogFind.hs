@@ -21,16 +21,16 @@ a </> b = a ++ "/" ++ b
 -- |
 -- Tell whether a file is a reference to another directory (., ..)
 --
--- >>> isFilePathRelative "."
+-- >>> isCurrentOrParentFolder "."
 -- True
 --
--- >>> isFilePathRelative ".."
+-- >>> isCurrentOrParentFolder ".."
 -- True
 --
--- >>> isFilePathRelative "banana"
+-- >>> isCurrentOrParentFolder "banana"
 -- False
-isFilePathRelative :: FilePath -> Bool
-isFilePathRelative f = f == "." || f == ".."
+isCurrentOrParentFolder :: FilePath -> Bool
+isCurrentOrParentFolder f = f == "." || f == ".."
 
 
 -- |
@@ -38,7 +38,7 @@ isFilePathRelative f = f == "." || f == ".."
 -- is split in a tuple of file paths of directories and file paths of files.
 getDirectorySeperatedContent :: FilePath -> IO ([FilePath], [FilePath])
 getDirectorySeperatedContent directory = do
- allFilePaths            <- filter (not . isFilePathRelative) <$> getDirectoryContents directory
+ allFilePaths            <- filter (not . isCurrentOrParentFolder) <$> getDirectoryContents directory
  filePathIsDirectory     <- mapM doesDirectoryExist allFilePaths
 
  let absoluteFilePaths    = (directory </>) <$> allFilePaths
@@ -131,6 +131,7 @@ matchesAll xs = and . applyPredicates (flip (=~) <$> xs)
 -- >>> (matchesSome []) "xyz"
 -- True
 matchesSome :: [String] -> String -> Bool
+matchesSome [] = const True
 matchesSome xs = or . applyPredicates (flip (=~) <$> xs)
 
 
@@ -138,6 +139,6 @@ matchesSome xs = or . applyPredicates (flip (=~) <$> xs)
 -- Applies a list of predicates to a value.
 --
 -- >>> applyPredicates [(<1), (<3)] 2
--- [False, True]
+-- [False,True]
 applyPredicates :: [a -> Bool] -> a -> [Bool]
 applyPredicates xs = (<$> xs) . flip ($)
