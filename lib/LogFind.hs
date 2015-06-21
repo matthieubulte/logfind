@@ -115,6 +115,26 @@ matchesAll xs = and . applyPredicates (flip (=~) <$> xs)
 
 
 -- |
+-- Converts multiple string to a predicate testing if a filename is to include in
+-- the result set. The filename satisties the predicate if any of the predicate
+-- created for each element of the list was satisfied.
+--
+-- >>> (matchesSome ["y", "a"]) "xyz"
+-- True
+--
+-- >>> (matchesSome ["^y", "z"]) "xyz"
+-- True
+--
+-- >>> (matchesSome ["^y", "b"]) "xyz"
+-- False
+--
+-- >>> (matchesSome []) "xyz"
+-- True
+matchesSome :: [String] -> String -> Bool
+matchesSome xs = or . applyPredicates (flip (=~) <$> xs)
+
+
+-- |
 -- Applies a list of predicates to a value.
 --
 -- >>> applyPredicates [(<1), (<3)] 2

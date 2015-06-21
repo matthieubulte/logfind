@@ -1,7 +1,7 @@
 module Main where
 
 import           Data.Functor       ((<$>))
-import           LogFind            (getAllFilesUnder, matchesAll,
+import           LogFind            (getAllFilesUnder, matchesAll, matchesSome,
                                      multipleStringsToPredicate)
 import           System.Directory   (getCurrentDirectory)
 import           System.Environment (getArgs)
@@ -11,7 +11,9 @@ main :: IO ()
 main = do
 
   arguments         <- getArgs
-  let filePredicate = matchesAll arguments
+  let filePredicate = case arguments of
+                        ("-o"):args -> matchesSome args
+                        args        -> matchesAll  args
 
   confContent       <- readFile ".logfind" `catchIOError` const (return "")
   let pathPredicate  = multipleStringsToPredicate . lines $ confContent
