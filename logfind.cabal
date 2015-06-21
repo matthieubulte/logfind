@@ -1,0 +1,37 @@
+name:                logfind
+version:             0.0.0.0
+synopsis:            Simple version of grep
+homepage:            github.com/matthieubulte/logfind
+license:             MIT
+license-file:        LICENSE
+author:              Matthieu Bulté
+maintainer:          matthieu.bulte.06@gmail.com
+build-type:          Simple
+cabal-version:       >=1.10
+
+library
+  default-language:    Haskell2010
+  hs-source-dirs:      src
+  ghc-options:         -threaded -Wall
+  exposed-modules:     LogFind
+  build-depends:       base
+                     , regex-tdfa
+
+test-suite doctest
+  type:               exitcode-stdio-1.0
+  default-language:   Haskell2010
+  hs-source-dirs:     test
+  ghc-options:        -threaded -Wall
+  main-is:            doctest.hs
+  build-depends:      base
+                    , doctest
+
+test-suite spec
+  type:               exitcode-stdio-1.0
+  default-language:   Haskell2010
+  hs-source-dirs:     test
+  ghc-options:        -threaded -Wall
+  main-is:            Spec.hs
+  build-depends:      base
+                    , hspec
+                    , logfind
