@@ -1,10 +1,11 @@
 module LogFind ( getAllFilesUnder
+               , multipleStringsToPredicate
                ) where
 
 import           Data.Functor
 import           Data.List        (partition)
 import           System.Directory (doesDirectoryExist, getDirectoryContents)
-
+import           Text.Regex.Posix ((=~))
 
 -- |
 -- Join two file paths the Unix way using "/".
@@ -52,3 +53,41 @@ getAllFilesUnder directory = do
  subChildren           <- sequence $ getAllFilesUnder <$> directories
 
  return $ files ++ concat subChildren
+
+
+-- |
+-- Converts a string to a predicate testing if a filename is to include in
+-- the result set
+--
+-- >>> (stringToPredicate "-xyz") "xyz"
+-- False
+--
+-- >>> (stringToPredicate "+xyz") "xyz"
+-- True
+--
+-- >>> (stringToPredicate "xyz") "xyz"
+-- True
+--
+-- >>> (stringToPredicate "^xy+z$") "xyyyyyyyyyyz"
+-- True
+stringToPredicate :: String -> String -> Bool
+stringToPredicate ('-':regex) = not . (=~ regex)
+stringToPredicate ('+':regex) = (=~ regex)
+stringToPredicate regex       = (=~ regex)
+
+
+-- |
+-- Converts multiple string to a predicate testing if a filename is to include in
+-- the result set. The filename satisties the predicate if each of the predicate
+-- created for each element of the list was satisfied.
+--
+-- >>> (multipleStringsToPredicate ["-xyz", "+z"]) "xyz"
+-- False
+--
+-- >>> (multipleStringsToPredicate ["-xyz", "+z"]) "yz"
+-- True
+--
+-- >>> (multipleStringsToPredicate []) "yz"
+-- True
+multipleStringsToPredicate :: [String] -> String -> Bool
+multipleStringsToPredicate xs = and . (<$> (stringToPredicate <$> xs)) . flip ($)

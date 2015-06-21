@@ -16,6 +16,7 @@ executable logfind
   main-is:             Main.hs
   build-depends:       base
                      , logfind
+                     , regex-posix
                      , directory
 
 library
@@ -24,7 +25,7 @@ library
   ghc-options:         -threaded -Wall
   exposed-modules:     LogFind
   build-depends:       base
-                     , regex-tdfa
+                     , regex-posix
                      , directory
 
 test-suite doctest
