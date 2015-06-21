@@ -13,5 +13,5 @@
 + ~~create cabal file~~
 + ~~create a function to find all files in a directory and its sub-directories~~
 + ~~create a function to filter files based on the list of regexes used to find files~~
-+ create a function creating a predicate for files the AND feature
++ ~~create a function creating a predicate for files the AND feature~~
 + create a function creating a predicate over files for the OR feature

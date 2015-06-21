@@ -1,5 +1,7 @@
 module LogFind ( getAllFilesUnder
                , multipleStringsToPredicate
+               , matchesAll
+               , matchesSome
                ) where
 
 import           Data.Functor
@@ -81,6 +83,9 @@ stringToPredicate regex       = (=~ regex)
 -- the result set. The filename satisties the predicate if each of the predicate
 -- created for each element of the list was satisfied.
 --
+-- Putting a "-" in front of a line will negate the predicate.
+-- Putting a "+" or nothing in front of a line will have no effect.
+--
 -- >>> (multipleStringsToPredicate ["-xyz", "+z"]) "xyz"
 -- False
 --
@@ -90,4 +95,29 @@ stringToPredicate regex       = (=~ regex)
 -- >>> (multipleStringsToPredicate []) "yz"
 -- True
 multipleStringsToPredicate :: [String] -> String -> Bool
-multipleStringsToPredicate xs = and . (<$> (stringToPredicate <$> xs)) . flip ($)
+multipleStringsToPredicate xs = and . applyPredicates (stringToPredicate <$> xs)
+
+-- |
+-- Converts multiple string to a predicate testing if a filename is to include in
+-- the result set. The filename satisties the predicate if each of the predicate
+-- created for each element of the list was satisfied.
+--
+-- >>> (matchesAll ["y", "z"]) "xyz"
+-- True
+--
+-- >>> (matchesAll ["^y", "z"]) "xyz"
+-- False
+--
+-- >>> (matchesAll []) "xyz"
+-- True
+matchesAll :: [String] -> String -> Bool
+matchesAll xs = and . applyPredicates (flip (=~) <$> xs)
+
+
+-- |
+-- Applies a list of predicates to a value.
+--
+-- >>> applyPredicates [(<1), (<3)] 2
+-- [False, True]
+applyPredicates :: [a -> Bool] -> a -> [Bool]
+applyPredicates xs = (<$> xs) . flip ($)
