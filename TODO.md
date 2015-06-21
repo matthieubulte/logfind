@@ -5,8 +5,8 @@
 + ~~find the best way to test if a file contains some words (OR feature)~~: create one regex by joining each word with `|`
 + ~~find a unit test library~~: [hspec](https://hspec.github.io/) seems to be a good library, also found [a great article](https://github.com/kazu-yamamoto/unit-test-example/blob/master/markdown/en/tutorial.md) about it. The article also presents [doctest](https://github.com/sol/doctest) which also seems to be a great tool.
 + ~~find a regular expression library~~: [regex-tdfa](https://hackage.haskell.org/package/regex-tdfa-1.1.2) seems to be the way to go.
-+ find a library to decode command line arguments
-+ find out how to test IO code
++ ~~find a library to decode command line arguments~~: [getArgs](https://hackage.haskell.org/package/base-4.8.0.0/docs/System-Environment.html#v:getArgs) from `base` should be enough as there is at most one flag to read.
++ ~~find out how to test IO code~~: no satifying result here, I'll just make sure no have a little impure code as possible, that's anyway a good practice.
 
 
 ##### implementation
